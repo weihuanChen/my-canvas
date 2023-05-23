@@ -9,14 +9,17 @@
         header
         <space>
           <RadioGroup v-model="selectValue" button-style="solid" type="button">
-            <Radio label="厂房"></Radio>
-            <Radio label="配电箱"></Radio>
-            <Radio label="电缆"></Radio>
-            <Radio label="爬梯"></Radio>
+            <Radio label="厂房" value="厂房"></Radio>
+            <Radio label="配电箱" value="配电箱"></Radio>
+            <Radio label="电缆" value="电缆"></Radio>
+            <Radio label="爬梯" value="爬梯"></Radio>
           </RadioGroup>
           <Divider type="vertical" />
           <history></history>
         </space>
+        <div style="float: right">
+          <save></save>
+        </div>
       </Header>
       <!-- 画布区域 -->
       <Content style="display: flex; height: calc(100vh - 64px)">
@@ -25,7 +28,7 @@
           <!-- <MenuItem :name="1" class="menu-item">
             <Icon type="md-book" size="24" />
             <div>模板</div>
-                                    </MenuItem> -->
+                                                </MenuItem> -->
             <MenuItem :name="1" class="menu-item">
             <Icon type="md-images" size="24" />
             <div>元素</div>
@@ -33,17 +36,17 @@
           <!-- <MenuItem :name="3" class="menu-item">
             <Icon type="md-reorder" size="24" />
             <div>布局</div>
-                                    </MenuItem> -->
+                                                </MenuItem> -->
           </Menu>
           <div class="content">
             <!-- 常用元素 -->
             <div v-show="menuActive === 1" class="left-panel">
-              <tools></tools>
+              <tools :selectType="selectValue"></tools>
             </div>
             <!-- 背景设置 -->
           <!-- <div v-show="menuActive === 3" class="left-panel">
               <layer></layer>
-                                      </div> -->
+                                                  </div> -->
           </div>
         </div>
         <div id="workspace" style="width: 100%; position: relative; background: #f1f1f1">
@@ -52,11 +55,13 @@
             <canvas id="canvas" :class="ruler ? 'design-stage-grid' : ''"></canvas>
           <!-- <dragMode></dragMode>
         <zoom></zoom>
-                                            <mouseMenu></mouseMenu> -->
+                                                        <mouseMenu></mouseMenu> -->
           </div>
         </div>
+        <!-- 属性区域 380-->
         <div style="width: 530px; height: 100%; padding: 10px; overflow-y: auto; background: #fff">
           <!-- <set-size></set-size> -->
+          <attributes-list></attributes-list>
         </div>
       </Content>
     </Layout>
@@ -66,6 +71,7 @@
 <script>
 import EditorWorkspace from '@/core/EditorWorkspace';
 import HelloWorld from '@/components/HelloWorld.vue'
+import save from '@/components/save.vue';
 //左侧元素组件
 import tools from '@/components/tools.vue';
 import setSize from '@/components/setSize.vue';
@@ -74,6 +80,7 @@ import Editor from '@/core';
 import CanvasEventEmitter from '@/utils/event/notifier';
 // 右侧组件
 import history from '@/components/history.vue';
+import attributesList from '@/components/attributesList'
 import { fabric } from 'fabric';
 const event = new CanvasEventEmitter()
 const canvas = {}
@@ -88,7 +95,9 @@ export default {
     HelloWorld,
     tools,
     setSize,
-    history
+    history,
+    attributesList,
+    save
   },
   data() {
     return {

@@ -69,7 +69,14 @@ export default {
             isArrow: false,
         }
     },
+    props: {
+        selectType: {
+            default: () => '配电箱',
+            type: String
+        }
+    },
     created() {
+        console.log(this.selectType);
         // 线条绘制
         this.drawHandler = initializeLineDrawing(this.canvas.c, defaultPosition);
 
@@ -119,6 +126,7 @@ export default {
             }
         },
         addCircle(option) {
+            const _this = this
             const circle = new this.fabric.Circle({
                 ...defaultPosition,
                 ...option,
@@ -128,6 +136,7 @@ export default {
                 fill: "rgba(255, 255, 255, 0)",
                 id: uuid(),
                 name: '圆形',
+                text: _this.selectType
             });
             this.canvas.c.add(circle);
             if (!option) {
@@ -136,6 +145,7 @@ export default {
             this.canvas.c.setActiveObject(circle);
         },
         addRect(option) {
+            const _this = this;
             const rect = new this.fabric.Rect({
                 ...defaultPosition,
                 ...option,
@@ -146,6 +156,7 @@ export default {
                 height: 200,
                 id: uuid(),
                 name: '矩形',
+                text: _this.selectType
             });
             this.canvas.c.add(rect);
             if (!option) {

@@ -57,20 +57,49 @@ class EditorWorkspace {
   // 初始化画布
   _initWorkspace() {
     const { width, height } = this.option;
-    const workspace = new fabric.Rect({
-      fill: '#ffffff',
-      width,
-      height,
-      id: 'workspace',
-    });
-    workspace.set('selectable', false);
-    workspace.set('hasControls', false);
-    workspace.hoverCursor = 'selection';
-    this.canvas.add(workspace);
-    this.canvas.renderAll();
+    const canvasObj = this.canvas
+    const _this = this;
+    // const workspace = new fabric.Rect({
+    //   fill: '#ffffff',
+    //   width,
+    //   height,
+    //   id: 'workspace',
+    // });
+    // workspace.set('selectable', false);
+    // workspace.set('hasControls', false);
+    // workspace.hoverCursor = 'selection';
+    // this.canvas.add(workspace);
+    // this.canvas.renderAll();
+    let workspace = null
+    // 创建一个新的 Image 对象
+    var img = new Image();
+    img.src = 'src/assets/filters/kotei_9628.png';
 
-    this.workspace = workspace;
-    this.auto();
+    // 等待图像加载完成
+    img.onload = function () {
+      // 创建一个新的 Pattern 对象
+      var pattern = new fabric.Pattern({
+        source: img,
+        repeat: 'repeat',
+        offset: new fabric.Point(0, 0)
+      });
+
+      // 创建一个新的 Rect 对象，并将其 fill 属性设置为 pattern
+      workspace = new fabric.Rect({
+        width,
+        height,
+        fill: pattern
+      });
+
+      workspace.set('selectable', false);
+      workspace.set('hasControls', false);
+      workspace.hoverCursor = 'selection';
+      canvasObj.add(workspace);
+      canvasObj.renderAll();
+
+      _this.workspace = workspace;
+      _this.auto();
+    };
   }
 
   /**
@@ -226,7 +255,7 @@ class EditorWorkspace {
     });
 
     this.canvas.on('mouse:wheel', function (opt) {
-      console.log(opt); 
+      console.log(opt);
       const delta = opt.e.deltaY;
       let zoom = this.canvas.getZoom();
       zoom *= 0.999 ** delta;
